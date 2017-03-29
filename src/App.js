@@ -95,6 +95,8 @@ class App extends Component {
       drawerActive: false,
       snackbarActive: false,
       dialogActive: false,
+      dialogTitle: "Add a new university",
+      dialogEdit: false,
       inputName: "",
       inputCity: "",
       inputCountry: "",
@@ -330,9 +332,16 @@ class App extends Component {
    */
   renderDialog = () => {
     var inDialog = [];
+    var toggleFunction;
+
     if(this.state.selectedUniversity === -1) {
-      this.dialogActions[0].label = "Add";
-      this.dialogActions[0].onClick = () => this.addUniversity();
+      if(this.state.dialogEdit) {
+        toggleFunction = () => this.toggleEditDialog();
+      }
+      else {
+        this.dialogActions[0].onClick = () => this.addUniversity();
+        toggleFunction = () => this.toggleAddDialog();
+      }
       inDialog.push(
         <table width="100%">
           <tr>
@@ -349,9 +358,9 @@ class App extends Component {
         <Dialog
           active={this.state.dialogActive}
           actions={this.dialogActions}
-          onEscKeyDown={() => this.toggleAddDialog()}
-          onOverlayClick={() => this.toggleAddDialog()}
-          title="Add a new university"
+          onEscKeyDown={toggleFunction}
+          onOverlayClick={toggleFunction}
+          title={this.state.dialogTitle}
           type="large"
         >
           {inDialog}
@@ -359,8 +368,13 @@ class App extends Component {
       );
     }
     else {
-      this.dialogActions[0].label = "Save";
-      this.dialogActions[0].onClick = () => this.addFaculty();
+      if(this.state.dialogEdit) {
+        toggleFunction = () => this.toggleEditDialog();
+      }
+      else {
+        this.dialogActions[0].onClick = () => this.addFaculty();
+        toggleFunction = () => this.toggleAddDialog();
+      }
       inDialog.push(
         <table width="100%">
           <tr><td colSpan="2"><Input type='text' label="Name" hint='Name' required  value={this.state.inputName} onChange={(value) => this.handleInputChange("inputName", value)} /></td></tr>
@@ -370,9 +384,9 @@ class App extends Component {
         <Dialog
           active={this.state.dialogActive}
           actions={this.dialogActions}
-          onEscKeyDown={() => this.toggleAddDialog()}
-          onOverlayClick={() => this.toggleAddDialog()}
-          title="Add a new faculty"
+          onEscKeyDown={toggleFunction}
+          onOverlayClick={toggleFunction}
+          title={this.state.dialogTitle}
           type="large"
         >
           {inDialog}
@@ -472,9 +486,20 @@ class App extends Component {
    * Toggles the visiblity of the adding Dialog.
    */
   toggleAddDialog = () => {
+    this.dialogActions[0].label = "Add";
     var newValue = !this.state.dialogActive;
+    var newTitle = "";
+    if(this.state.selectedUniversity === -1) newTitle = "Add a new university";
+    else newTitle = "Add a new faculty";
     this.setState({
-      dialogActive: newValue
+      dialogActive: newValue,
+      dialogTitle: newTitle,
+      inputName: "",
+      inputCity: "",
+      inputCountry: "",
+      inputUrl: "",
+      inputLogoUrl: "",
+      dialogEdit: false
     })
   }
 
@@ -482,18 +507,27 @@ class App extends Component {
    * Toggles the visiblity of the adding Dialog.
    */
   toggleEditDialog = (id) => {
+    this.dialogActions[0].label = "Save";
     var newValue = !this.state.dialogActive;
     var newInputName = "";
     var newInputCity = "";
     var newInputCountry = "";
     var newInputUrl = "";
     var newInputLogoUrl = "";
+    var newTitle = "";
     if(this.state.selectedUniversity === -1) {
-      var newInputName = universities[id].name;
-      var newInputCity = universities[id].city;
-      var newInputCountry = universities[id].country;
-      var newInputUrl = universities[id].url;
-      var newInputLogoUrl = universities[id].logoUrl;
+      newInputName = universities[id].name;
+      newInputCity = universities[id].city;
+      newInputCountry = universities[id].country;
+      newInputUrl = universities[id].url;
+      newInputLogoUrl = universities[id].logoUrl;
+      newTitle = "Edit university";
+      this.dialogActions[0].onClick = () => this.editUniversity(id);
+    }
+    else {
+      newInputName = faculties[id].name;
+      newTitle = "Edit faculty";
+      this.dialogActions[0].onClick = () => this.editFaculty(id);
     }
     this.setState({
       dialogActive: newValue,
@@ -501,7 +535,9 @@ class App extends Component {
       inputCity: newInputCity,
       inputCountry: newInputCountry,
       inputUrl: newInputUrl,
-      inputLogoUrl: newInputLogoUrl
+      inputLogoUrl: newInputLogoUrl,
+      dialogTitle: newTitle,
+      dialogEdit: true
     })
   }
 
