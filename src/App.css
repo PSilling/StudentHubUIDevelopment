@@ -21,18 +21,6 @@
   overflow: auto;
 }
 
-/*
-.App-panel-body-sidebar {
-  float: left;
-  border: 1px solid red;
-  border-right-style: ridge;
-  width: calc(150px + 5%);
-  height: 1000px;
-  overflow-y: scroll;
-  padding-right: 20px;
-}
-*/
-
 .App-panel-body-main {
   text-align: center;
   border: 1px solid blue;
@@ -46,7 +34,7 @@
 .Header {
   padding-bottom: 10px;
   float: left;
-  font-size: 5vh;
+  font-size: calc(1em + 3.5vh);
   text-align: left;
   width: 100%;
 }
