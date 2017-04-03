@@ -105,11 +105,7 @@ class App extends Component {
 
       nameErrorLabel: "",
       cityErrorLabel: "",
-      countryErrorLabel: "",
-      snackbar: {
-        active: false,
-        label: ""
-      }
+      countryErrorLabel: ""
     };
   }
 
@@ -146,12 +142,19 @@ class App extends Component {
    * @param id  id to be removed
    */
   delete = (id) => {
-    if(this.state.selectedUniversity === -1) universities[id] = { };
-    else faculties[id] = { };
+    if(this.state.selectedUniversity === -1) {
+      universities[id] = { };
+      this.setSnackbarLabel("The university has been succesfully deleted from the database!");
+    }
+    else {
+      faculties[id] = { };
+      this.setSnackbarLabel("The faculty has been succesfully deleted from the database!");
+    }
 
     this.setState({
       universityData: universities,
-      facultyData: faculties
+      facultyData: faculties,
+      snackbarActive: true
     });
   }
 
@@ -173,7 +176,9 @@ class App extends Component {
       inputCity: "",
       inputCountry: "",
       inputUrl: "",
-      inputLogoUrl: ""
+      inputLogoUrl: "",
+      snackbarLabel: "The university has been succesfully changed!",
+      snackbarActive: true
     });
   }
 
@@ -188,7 +193,9 @@ class App extends Component {
       facultyDialogActive: false,
       editId: -1,
       nameErrorLabel: "",
-      inputName: ""
+      inputName: "",
+      snackbarLabel: "The faculty has been succesfully changed!",
+      snackbarActive: true
     });
   }
 
@@ -213,7 +220,9 @@ class App extends Component {
       inputCity: "",
       inputCountry: "",
       inputUrl: "",
-      inputLogoUrl: ""
+      inputLogoUrl: "",
+      snackbarLabel: "The university has been succesfully created!",
+      snackbarActive: true
     });
   }
 
@@ -231,7 +240,9 @@ class App extends Component {
       facultyDialogActive: false,
       editId: -1,
       nameErrorLabel: "",
-      inputName: ""
+      inputName: "",
+      snackbarLabel: "The faculty has been succesfully created!",
+      snackbarActive: true
     });
   }
 
@@ -442,12 +453,10 @@ class App extends Component {
                 selectedUniversity={this.state.selectedUniversity}
                 universityData={this.state.universityData}
                 facultyData={this.state.facultyData}
-                snackbarHandler={() => this.toggleSnackbar()}
                 editToggleUniversityHandler={(id) => this.toggleUniversityDialog(id)}
                 editToggleFacultyHandler={(id) => this.toggleFacultyDialog(id)}
                 deleteHandler={(id) => this.delete(id)}
                 stateSetter={(id, head) => this.selectUniversity(id, head)}
-                snackbarLabelSetter={(label) => this.setSnackbarLabel(label)}
               />
             </div>
           </div>

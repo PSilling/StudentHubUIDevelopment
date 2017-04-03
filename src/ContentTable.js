@@ -13,8 +13,6 @@ import ReturnButton from './ReturnButton.js';
  * @param selectedUniversity which university is currenty selected
  * @param universityData                         list of all the universities
  * @param facultyData                            list of all the faculties
- * @param snackbarLabelSetter(label)             sets the snackbar label
- * @param snackbarHandler()                      defines the function to call to toggle the Snackbar
  * @param editToggleUniversityHandler(id)        defines the function to call on EditButton clicks when viewing universities
  * @param editToggleFacultyHandler(id)           defines the function to call on EditButton clicks when viewing faculties
  * @param deleteHandler(id)                      defines the function to call on DeleteButton clicks
@@ -38,8 +36,6 @@ class ContentTable extends Component {
     var newHeader;
     if(id === -1) newHeader = "Universities";
     else newHeader = this.props.universityData[id].name+" faculties";
-    this.props.snackbarLabelSetter("Clicked on university with ID "+id);
-    this.props.snackbarHandler();
 
     this.props.stateSetter(id, newHeader);
     this.setState({
@@ -74,9 +70,7 @@ class ContentTable extends Component {
    * @return generated cells
    */
   generateUniversityRow = (id) => {
-    var row = [];
-
-    row.push(
+    return(
       <TableRow>
         <TableCell numeric>
           {this.props.universityData[id].id}
@@ -106,7 +100,7 @@ class ContentTable extends Component {
                   <EditButton selectedUniversity={this.props.selectedUniversity} toggleHandler={() => this.props.editToggleUniversityHandler(id)} />
                 </td>
                 <td>
-                  <DeleteButton selectedUniversity={this.props.selectedUniversity} toggleHandler={() => this.props.deleteHandler(id)} />
+                  <DeleteButton selectedUniversity={this.props.selectedUniversity} deleteHandler={() => this.props.deleteHandler(id)} />
                 </td>
               </tr>
             </tbody>
@@ -114,7 +108,6 @@ class ContentTable extends Component {
         </TableCell>
       </TableRow>
     );
-    return row;
   }
 
   /**
@@ -122,9 +115,7 @@ class ContentTable extends Component {
    * @return generated cells
    */
   generateFacultyRow = (id) => {
-    var row = [];
-
-    row.push(
+    return(
       <TableRow>
         <TableCell numeric>
           {this.props.facultyData[id].id}
@@ -143,7 +134,7 @@ class ContentTable extends Component {
                   <EditButton selectedUniversity={this.props.selectedUniversity} toggleHandler={() => this.props.editToggleFacultyHandler(id)} />
                 </td>
                 <td>
-                  <DeleteButton selectedUniversity={this.props.selectedUniversity} toggleHandler={() => this.props.deleteHandler(id)} />
+                  <DeleteButton selectedUniversity={this.props.selectedUniversity} deleteHandler={() => this.props.deleteHandler(id)} />
                 </td>
               </tr>
             </tbody>
@@ -151,7 +142,6 @@ class ContentTable extends Component {
         </TableCell>
       </TableRow>
     );
-    return row;
   }
 
   /**
@@ -163,11 +153,11 @@ class ContentTable extends Component {
 
     if(this.state.selectedUniversity === -1) {
       for(let i = 0; i < this.props.universityData.length; i++) {
-      if(typeof this.props.universityData[i].name !== "undefined" && this.props.universityData[i].name !== "" &&
-          typeof this.props.universityData[i].city !== "undefined" && this.props.universityData[i].city !== "" &&
-          typeof this.props.universityData[i].country !== "undefined" && this.props.universityData[i].country !== "") {
-        cells.push(this.generateUniversityRow(i));
-      }
+        if(typeof this.props.universityData[i].name !== "undefined" && this.props.universityData[i].name !== "" &&
+            typeof this.props.universityData[i].city !== "undefined" && this.props.universityData[i].city !== "" &&
+            typeof this.props.universityData[i].country !== "undefined" && this.props.universityData[i].country !== "") {
+          cells.push(this.generateUniversityRow(i));
+        }
       }
     }
     else {
@@ -186,13 +176,10 @@ class ContentTable extends Component {
    * @return desired button
    */
   generateReturnButton = () => {
-    var button;
-
     if(this.state.selectedUniversity !== -1) {
-      button = <ReturnButton returnCallback={() => this.handleCellClick(-1)} />;
+      return (<ReturnButton returnCallback={() => this.handleCellClick(-1)} />);
     }
-
-    return button;
+    return;
   }
 
   render() {

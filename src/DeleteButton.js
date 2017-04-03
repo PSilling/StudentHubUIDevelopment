@@ -3,12 +3,12 @@ import Button from 'react-toolbox/lib/button/Button.js';
 
 /**
  * Renders a ContentTable delete Button.
- * @param toggleHandler() defines the function to call onClick
+ * @param deleteHandler() defines the function to call onClick
  */
 class DeleteButton extends Component {
   render() {
     return(
-      <Button onClick={() => this.props.toggleHandler()} icon="delete" label="Delete" />
+      <Button onClick={() => this.props.deleteHandler()} icon="delete" label="Delete" />
     );
   }
 }

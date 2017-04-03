@@ -13,28 +13,6 @@ import Input from 'react-toolbox/lib/input/Input.js';
  * @param handleInputChange(name, value)  function to call when Input fields change
  */
 class FacultyDialog extends Component {
-  /**
-   * Generates the insides of the Dialog
-   * @return the desired insides
-   */
-  generateDialog() {
-    var dialog = [];
-
-    dialog.push(
-      <table width="95%">
-        <tbody>
-          <tr>
-            <td>
-              <Input type='text' label="Name" hint='Faculty name' error={this.props.errorLabel}  required  value={this.props.name} onChange={(value) => this.props.handleInputChange("inputName", value)} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    );
-
-    return dialog;
-  }
-
   render() {
     return(
       <div className="Dialog-faculty">
@@ -46,7 +24,15 @@ class FacultyDialog extends Component {
           title={this.props.titleLabel}
           type="large"
         >
-          {this.generateDialog()}
+          <table width="95%">
+            <tbody>
+              <tr>
+                <td>
+                  <Input type='text' label="Name" hint='Faculty name' error={this.props.errorLabel}  required  value={this.props.name} onChange={(value) => this.props.handleInputChange("inputName", value)} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </Dialog>
       </div>
     );

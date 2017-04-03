@@ -19,46 +19,6 @@ import Input from 'react-toolbox/lib/input/Input.js';
  * @param handleInputChange(name, value)  function to call when Input fields change
  */
 class UniversityDialog extends Component {
-  /**
-   * Generates the insides of the Dialog
-   * @return the desired insides
-   */
-  generateDialog() {
-    var dialog = [];
-
-    dialog.push(
-      <table width="95%">
-        <tbody>
-          <tr>
-            <td colSpan="2">
-              <Input type='text'  label="Name" hint='University name' error={this.props.errorName} value={this.props.name} onChange={(value) => this.props.handleInputChange("inputName", value)} required />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <Input type='text' label="City" hint='City' error={this.props.errorCity} value={this.props.city} onChange={(value) => this.props.handleInputChange("inputCity", value)}  required maxLength={32} />
-            </td>
-            <td>
-              <Input type='text' label="Country" hint='Country (eg. CZ, SK)' error={this.props.errorCountry} value={this.props.country} onChange={(value) => this.props.handleInputChange("inputCountry", value)}  required maxLength={8} />
-            </td>
-          </tr>
-          <tr>
-            <td colSpan="2">
-              <Input type='text' label='Website' hint='Link to the web page' value={this.props.url} onChange={(value) => this.props.handleInputChange("inputUrl", value)} />
-            </td>
-          </tr>
-          <tr>
-            <td colSpan="2">
-              <Input type='text' label='Logo' hint='Link to the logo source' value={this.props.logoUrl} onChange={(value) => this.props.handleInputChange("inputLogoUrl", value)} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    );
-
-    return dialog;
-  }
-
   render() {
     return(
       <div className="Dialog-university">
@@ -70,7 +30,33 @@ class UniversityDialog extends Component {
           title={this.props.titleLabel}
           type="large"
         >
-          {this.generateDialog()}
+          <table width="95%">
+            <tbody>
+              <tr>
+                <td colSpan="2">
+                  <Input type='text'  label="Name" hint='University name' error={this.props.errorName} value={this.props.name} onChange={(value) => this.props.handleInputChange("inputName", value)} required />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <Input type='text' label="City" hint='City' error={this.props.errorCity} value={this.props.city} onChange={(value) => this.props.handleInputChange("inputCity", value)}  required maxLength={32} />
+                </td>
+                <td>
+                  <Input type='text' label="Country" hint='Country (eg. CZ, SK)' error={this.props.errorCountry} value={this.props.country} onChange={(value) => this.props.handleInputChange("inputCountry", value)}  required maxLength={8} />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <Input type='text' label='Website' hint='Link to the web page' value={this.props.url} onChange={(value) => this.props.handleInputChange("inputUrl", value)} />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <Input type='text' label='Logo' hint='Link to the logo source' value={this.props.logoUrl} onChange={(value) => this.props.handleInputChange("inputLogoUrl", value)} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </Dialog>
       </div>
     );
