@@ -3,8 +3,9 @@ import Button from 'react-toolbox/lib/button/Button.js';
 
 /**
  * Renders the add Button.
- * @param toggleUniversityHandler() defines the function to call onClick when universities are browsed
- * @param toggleFacultyHandler()    defines the function to call onClick when faculties are browsed
+ * @param selectedUniversity          the university that is selected
+ * @param toggleUniversityHandler()   defines the function to call onClick when universities are browsed
+ * @param toggleFacultyHandler()      defines the function to call onClick when faculties are browsed
  */
 class AddButton extends Component {
   generateButton = () => {

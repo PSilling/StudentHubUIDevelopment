@@ -12,6 +12,7 @@ import FacultyDialog from './FacultyDialog.js';
 import SiteAppBar from './SiteAppBar.js';
 import SiteSnackbar from './SiteSnackbar.js';
 import UniversityDialog from './UniversityDialog.js';
+import UsersView from './UsersView.js';
 
 /**
  * Holds university state codes
@@ -448,6 +449,7 @@ class App extends Component {
                 </span>
               </div>
               <hr />
+            <UsersView />
               <Input type="search" icon="search" label="TODO: Search" disabled />
               <ContentTable
                 selectedUniversity={this.state.selectedUniversity}

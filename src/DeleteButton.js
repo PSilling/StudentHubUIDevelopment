@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import Button from 'react-toolbox/lib/button/Button.js';
+import IconButton from 'react-toolbox/lib/button/IconButton.js';
 
 /**
- * Renders a ContentTable delete Button.
+ * Renders a ContentTable delete IconButton.
  * @param deleteHandler() defines the function to call onClick
  */
 class DeleteButton extends Component {
   render() {
     return(
-      <Button onClick={() => this.props.deleteHandler()} icon="delete" label="Delete" />
+      <IconButton onClick={() => this.props.deleteHandler()} icon="delete" label="Delete" />
     );
   }
 }
