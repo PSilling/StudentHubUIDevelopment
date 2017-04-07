@@ -3,13 +3,24 @@ import List from 'react-toolbox/lib/list/List.js';
 import ListItem from 'react-toolbox/lib/list/ListItem.js';
 import ListSubHeader from 'react-toolbox/lib/list/ListSubHeader.js';
 
-import EditButton from './EditButton.js';
-import DeleteButton from './DeleteButton.js';
+import InviteButton from './InviteButton.js';
+import UserInviteDialog from './UserInviteDialog.js';
 
 /**
  * Renders the users vies for CompanyReps.
+ * @param inviteHandler()    callback function handling invitations
  */
 class CompanyRepUsersView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dialogActive: false
+    }
+  }
+
+  /**
+   * Generates all of the ListItems
+   */
   generateListItems = () => {
     var items = [];
 
@@ -26,11 +37,26 @@ class CompanyRepUsersView extends Component {
     return items;
   }
 
+  /**
+   * Toggle the visiblity of the edit Dialog.
+   */
+  toggleDialog = () => {
+    var newDialogActive = !this.state.dialogActive;
+
+    this.setState({
+      dialogActive: newDialogActive
+    });
+  }
+
   render() {
     return(
-      <List selectable ripple>
-        {this.generateListItems()}
-      </List>
+      <div className="Users-company">
+        <InviteButton toggleHandler={() => this.toggleDialog()}/>
+        <List selectable ripple>
+          {this.generateListItems()}
+        </List>
+        <UserInviteDialog active={this.state.dialogActive} inviteHandler={(email, message) => this.props.inviteHandler(email, message)} toggleHandler={() => this.toggleDialog()} />
+      </div>
     );
   }
 }

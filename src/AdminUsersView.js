@@ -20,7 +20,7 @@ class AdminUsersView extends Component {
 
     this.state = {
       dialogActive: false,
-      editId: 0,
+      editId: -1
     };
   }
 
@@ -44,57 +44,67 @@ class AdminUsersView extends Component {
     var cells = [];
 
     for(let i = 0; i < this.props.users.length; i++) {
-      cells.push(
-        <TableRow>
-          <TableCell numeric>
-            {this.props.users[i].id}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].username}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].name}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].email}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].phone}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].faculty.name}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].company.name}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].roles}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].lastLogin}
-          </TableCell>
-          <TableCell>
-            {this.props.users[i].tags}
-          </TableCell>
-          <TableCell>
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    <EditButton toggleHandler={() => this.toggleDialog(i)} />
-                  </td>
-                  <td>
-                    <DeleteButton deleteHandler={() => this.props.deleteHandler(i)} />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </TableCell>
-        </TableRow>
-      );
+      if(this.props.users[i] !== "")
+        cells.push(
+          <TableRow>
+            <TableCell numeric>
+              {this.props.users[i].id}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].username}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].name}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].email}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].phone}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].faculty.name}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].company.name}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].roles}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].lastLogin}
+            </TableCell>
+            <TableCell>
+              {this.props.users[i].tags}
+            </TableCell>
+            <TableCell>
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <EditButton toggleHandler={() => this.toggleDialog(i)} />
+                    </td>
+                    <td>
+                      <DeleteButton deleteHandler={() => this.props.deleteHandler(i)} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </TableCell>
+          </TableRow>
+        );
     }
 
     return cells;
+  }
+
+  getEditUser = () => {
+    if(this.state.editId === -1) return -1;
+    else return this.props.users[this.state.editId];
+  }
+
+  handleUserEdit = (user) => {
+    this.props.editHandler(this.state.editId, user);
   }
 
   render() {
@@ -140,9 +150,9 @@ class AdminUsersView extends Component {
         </Table>
         <UserEditDialog
           active={this.state.dialogActive}
-          user={this.props.users[0]}
-          editHandler={(user) => this.props.editHandler(user)}
-          toggleHandler={() => this.toggleDialog(0)}
+          user={this.getEditUser()}
+          editHandler={(user) => this.props.editHandler(this.state.editId, user)}
+          toggleHandler={() => this.toggleDialog(-1)}
         />
     </div>
     );

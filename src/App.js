@@ -449,7 +449,6 @@ class App extends Component {
                 </span>
               </div>
               <hr />
-            <UsersView />
               <Input type="search" icon="search" label="TODO: Search" disabled />
               <ContentTable
                 selectedUniversity={this.state.selectedUniversity}

@@ -2,6 +2,46 @@ import React, { Component } from 'react';
 
 import AdminUsersView from './AdminUsersView.js';
 import CompanyRepUsersView from './CompanyRepUsersView.js';
+import SiteSnackbar from './SiteSnackbar.js';
+
+/**
+ * Creates a random list of new users.
+ */
+function generateUsers() {
+  var users = [];
+
+  for (var i = 0; i < 50; i++) {
+    users.push({
+      company: {
+        city:	"string",
+        country:	states.CZ,
+        id:	0,
+        logoUrl: "string",
+        name:	"string",
+        plan:	companyPlans.t1,
+        size:	companySizes.medium,
+        url:	"string"
+      },
+      email:	"string",
+      faculty: {
+        id:	0,
+        name:	"string",
+        university:	"University"
+      },
+      id:	i,
+      lastLogin:	[
+
+      ],
+      name:	"Name of "+i,
+      phone:	"777 666 0"+i,
+      roles:	userRoles.admin,
+      tags:	"Array",
+      username:	"Username of "+i
+    });
+  }
+
+  return users;
+}
 
 /**
  * Holds state codes
@@ -49,48 +89,16 @@ const companyPlans = {
  * Pregenerated users list.
  * @type {Array}
  */
-var userList = [
-  {
-    company: {
-      city:	"string",
-      country:	states.CZ,
-      id:	0,
-      logoUrl: "string",
-      name:	"string",
-      plan:	companyPlans.t1,
-      size:	companySizes.medium,
-      url:	"string"
-    },
-    email:	"string",
-    faculty: {
-      id:	0,
-      name:	"string",
-      university:	"University"
-    },
-    id:	0,
-    lastLogin:	[
+var userList = generateUsers();
 
-    ],
-    name:	"string",
-    phone:	"string",
-    roles:	userRoles.admin,
-    tags:	[
-
-    ],
-    username:	"string"
-  }
-];
-
-/**
- * Renders the return to university list Button.
- * @param returnCallback() defines the return function to call onClick
- */
 class UsersView extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      users: userList
+      users: userList,
+      snackbarActive: false,
+      snackbarLabel: ""
     };
   }
 
@@ -149,13 +157,16 @@ class UsersView extends Component {
    * Edits a user from the data.
    * @param user  the user to be changed
    */
-  editUser = (user) => {
+  editUser = (id, user) => {
+    if(id === -1) return;
     var users = this.state.users;
 
-    users[0].name = user;
+    users[id] = user;
 
     this.setState({
-      users: users
+      users: users,
+      snackbarActive: true,
+      snackbarLabel: "The user has been succesfully changed!"
     });
   }
 
@@ -166,11 +177,35 @@ class UsersView extends Component {
   deleteUser = (id) => {
     var users = this.state.users;
 
-    users[id].name = "";
+    users[id] = "";
 
     this.setState({
-      users: users
+      users: users,
+      snackbarActive: true,
+      snackbarLabel: "The user has been succesfully deleted!"
     });
+  }
+
+  /**
+   * Sends an invitation on a desired email
+   * @param email the email of the recipent
+   */
+  inviteUser = (email, message) => {
+    this.setState({
+      snackbarActive: true,
+      snackbarLabel: "Invitations cannot be sent yet!"
+    });
+  }
+
+  /**
+   * Toggles the visiblity of the Snackbar.
+   */
+  toggleSnackbar = () => {
+    var newValue = !this.state.snackbarActive;
+
+    this.setState({
+      snackbarActive: newValue
+    })
   }
 
   /**
@@ -178,14 +213,21 @@ class UsersView extends Component {
    * @return the desired component
    */
   generateView = () => {
-    if(this.isAdmin()) return (<AdminUsersView users={this.state.users} editHandler={(id, user) => this.editUser(id, user)}  deleteHandler={(id) => this.deleteUser(id)} />);
-    else return (<CompanyRepUsersView users={this.getCompanyUsers()} />);
+    if(this.isAdmin())
+      return (<AdminUsersView users={this.state.users} editHandler={(id, user) => this.editUser(id, user)}  deleteHandler={(id) => this.deleteUser(id)} />);
+    else
+      return (<CompanyRepUsersView users={this.getCompanyUsers()} inviteHandler={(email, message) => this.inviteUser(email, message)} />);
   }
 
   render() {
     return(
       <div className="Users-view">
         {this.generateView()}
+        <SiteSnackbar
+          active={this.state.snackbarActive}
+          toggleHandler={this.toggleSnackbar}
+          label={this.state.snackbarLabel}
+        />
       </div>
     );
   }
