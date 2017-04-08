@@ -13,6 +13,7 @@ import SiteAppBar from './SiteAppBar.js';
 import SiteSnackbar from './SiteSnackbar.js';
 import UniversityDialog from './UniversityDialog.js';
 import UsersView from './UsersView.js';
+import Util from './Util.js';
 
 /**
  * Holds university state codes
@@ -121,24 +122,6 @@ class App extends Component {
   }
 
   /**
-   * Searches a given array for the first available ID value.
-   * @param  array  the array to be searched
-   * @return        first free id value
-   */
-  findFreeID = (array) => {
-    var id;
-
-    for (var i = 0; i < array.length; i++) {
-      if(typeof array[i].id === "undefined") {
-        id = i;
-        break;
-      }
-      else id = array.length;
-    }
-    return id;
-  }
-
-  /**
    * Removes the desired item with a given id.
    * @param id  id to be removed
    */
@@ -205,7 +188,7 @@ class App extends Component {
    */
   addUniversity = () => {
     if(!this.checkUniversity()) return;
-    var id = this.findFreeID(universities);
+    var id = Util.findFreeID(universities);
 
     if(id === universities.lenght) universities.push({city: this.state.inputCity, country: this.state.inputCountry, id: universities.length, logoUrl: this.state.inputLogoUrl, name: this.state.inputName, url: this.state.inputUrl });
     else universities[id] = {city: this.state.inputCity, country: this.state.inputCountry, id: id, logoUrl: this.state.inputLogoUrl, name: this.state.inputName, url: this.state.inputUrl };
@@ -232,7 +215,7 @@ class App extends Component {
    */
   addFaculty = () => {
     if(!this.checkFaculty()) return;
-    var id = this.findFreeID(faculties);
+    var id = Util.findFreeID(faculties);
 
     if(id === faculties.lenght) faculties.push({ id: id, name: this.state.inputName, university: this.state.universityData[this.state.selectedUniversity].name });
     else faculties[id] = { id: id, name: this.state.inputName, university: this.state.universityData[this.state.selectedUniversity].name };
@@ -252,13 +235,9 @@ class App extends Component {
    * @return true if correct, false otherwise
    */
   checkUniversity = () => {
-    var newNameErrorLabel = "";
-    var newCityErrorLabel = "";
-    var newCountryErrorLabel = "";
-
-    if(this.state.inputName === "" || typeof this.state.inputName === "undefined") newNameErrorLabel = "University name is required!";
-    if(this.state.inputCity === "" || typeof this.state.inputCity === "undefined") newCityErrorLabel = "City is required!";
-    if(this.state.inputCountry === "" || typeof this.state.inputCountry === "undefined") newCountryErrorLabel = "Country is required!";
+    var newNameErrorLabel = Util.checkData(this.state.inputName, "University name is required!");
+    var newCityErrorLabel = Util.checkData(this.state.inputCity, "City is required!");
+    var newCountryErrorLabel = Util.checkData(this.state.inputCountry, "Country is required!");
 
     if(newNameErrorLabel !== "" || newCityErrorLabel !== "" || newCountryErrorLabel !== "") {
       this.setState({
@@ -276,9 +255,9 @@ class App extends Component {
    * @return true if correct, false otherwise
    */
   checkFaculty = () => {
-    if(this.state.inputName === "" || typeof this.state.inputName === "undefined") {
-      var newNameErrorLabel = "Faculty name is required!";
+    var newNameErrorLabel = Util.checkData(this.state.inputName, "Faculty name is required!");
 
+    if(newNameErrorLabel !== "") {
       this.setState({
         nameErrorLabel: newNameErrorLabel
       });

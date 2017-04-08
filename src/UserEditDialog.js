@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Dialog from 'react-toolbox/lib/dialog/Dialog.js';
 import Input from 'react-toolbox/lib/input/Input.js';
 
+import Util from './Util.js';
+
 /**
  * Renders the add Dialog for faculties.
  * @param active                          whether the dialog is active
@@ -114,16 +116,9 @@ class UserEditDialog extends Component {
    * @return true if correct, false otherwise
    */
   checkData = () => {
-    var newErrorName = "";
-    var newErrorUsername = "";
-    var newErrorMail = "";
-
-    if(this.state.username === "" || typeof this.state.username === "undefined")
-      newErrorName = "Username is required!";
-    if(this.state.name === "" || typeof this.state.name === "undefined")
-      newErrorUsername = "User name is required!";
-    if(this.state.mail === "" || typeof this.state.mail === "undefined")
-      newErrorMail = "User email is required!";
+    var newErrorUsername = Util.checkData(this.state.username, "Username is required!");
+    var newErrorName = Util.checkData(this.state.name, "User name is required!");
+    var newErrorMail = Util.checkData(this.state.mail, "User email is required!");
 
     if(newErrorName !== "" || newErrorUsername !== "" || newErrorMail !== "") {
       this.setState({

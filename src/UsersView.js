@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import AdminUsersView from './AdminUsersView.js';
 import CompanyRepUsersView from './CompanyRepUsersView.js';
 import SiteSnackbar from './SiteSnackbar.js';
+import Util from './Util.js';
 
 /**
  * Creates a random list of new users.
@@ -111,24 +112,6 @@ class UsersView extends Component {
   }
 
   /**
-   * Searches a given array for the first available ID value.
-   * @param  array  the array to be searched
-   * @return        first free id value
-   */
-  findFreeID = (array) => {
-    var id;
-
-    for (var i = 0; i < array.length; i++) {
-      if(typeof array[i].id === "undefined") {
-        id = i;
-        break;
-      }
-      else id = array.length;
-    }
-    return id;
-  }
-
-  /**
    * Gets the list of user associated with CompanyRep's faculty.
    * @return the list of users
    */
@@ -143,7 +126,7 @@ class UsersView extends Component {
   addUser = (user) => {
     var users = this.state.users;
 
-    var id = this.findFreeID(users);
+    var id = Util.findFreeID(users);
 
     if(id === users.lenght) users.push({ id: id, name: user });
     else users[id] = { id: id, name: user };

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Dialog from 'react-toolbox/lib/dialog/Dialog.js';
 import Input from 'react-toolbox/lib/input/Input.js';
+import Util from './Util.js';
 
 /**
  * Renders the add Dialog for faculties.
@@ -61,8 +62,9 @@ class UserEditDialog extends Component {
    * @return true if correct, false otherwise
    */
   checkData = () => {
-    if(this.state.mail === "" || typeof this.state.mail === "undefined") {
-      var newErrorMail = "Recipent email is required!";
+    var newErrorMail = Util.checkData(this.state.mail,  "Recipent email is required!");
+
+    if(newErrorMail !== "") {
       this.setState({
         errorMail: newErrorMail
       });
