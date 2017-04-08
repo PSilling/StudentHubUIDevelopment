@@ -142,7 +142,7 @@ class UserEditDialog extends Component {
           title="Edit user"
           type="large"
         >
-          <table width="95%">
+          <table width="100%">
             <tbody>
               <tr>
                 <td colSpan="2">

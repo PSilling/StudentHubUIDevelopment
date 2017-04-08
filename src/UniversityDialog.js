@@ -2,57 +2,203 @@ import React, { Component } from 'react';
 import Dialog from 'react-toolbox/lib/dialog/Dialog.js';
 import Input from 'react-toolbox/lib/input/Input.js';
 
+import Util from './Util.js';
+
 /**
  * Renders the input Dialog for universities.
- * @param actions                         dialog actions
+ * @param editId                          university edit id
  * @param active                          whether the dialog is active
- * @param name                            value of name Input
- * @param city                            value of city Input
- * @param country                         value of country Input
- * @param url                             value of url Input
- * @param logoUrl                         value of logoUrl Input
- * @param titleLabel                      value of Dialog title
- * @param errorName                       value of name Input error
- * @param errorCity                       value of city Input error
- * @param errorCountry                    value of country Input error
+ * @param university                      editing university
+ * @param addHandler(university)          function to call to create a new university
+ * @param editHandler(university)         function to call to change the edited university
  * @param toggleHandler()                 function to call when closing the Dialog
- * @param handleInputChange(name, value)  function to call when Input fields change
  */
 class UniversityDialog extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: "",
+      errorName: "",
+      city: "",
+      errorCity: "",
+      country: "",
+      errorCountry: "",
+      url: "",
+      logo: "",
+      titleLabel: "Add a new university",
+      actions: [
+        { label: "Add", onClick: () => this.handleAdd()},
+        { label: "Cancel", onClick: () => this.handleToggle() }
+      ]
+    }
+  }
+
+  /**
+   * Sets default input values on props change.
+   */
+  componentWillReceiveProps(nextProps) {
+    if(this.props === nextProps || nextProps.user === -1) return;
+
+    var nameState;
+    var cityState;
+    var countryState;
+    var urlState;
+    var logoState;
+    var titleState;
+    var actionsState;
+
+    if(nextProps.editId === -1) {
+      nameState = "";
+      cityState = "";
+      countryState = "";
+      urlState = "";
+      logoState = "";
+      titleState = "Add a new university";
+      actionsState = [
+        { label: "Add", onClick: () => this.handleAdd()},
+        { label: "Cancel", onClick: () => this.handleToggle() }
+      ];
+    }
+    else {
+      nameState = nextProps.university.name;
+      cityState = nextProps.university.city;
+      countryState = nextProps.university.country;
+      urlState = nextProps.university.url;
+      logoState = nextProps.university.logoUrl;
+      titleState = "Edit university";
+      actionsState = [
+        { label: "Save", onClick: () => this.handleEdit()},
+        { label: "Cancel", onClick: () => this.handleToggle() }
+      ];
+    }
+
+    this.setState({
+      name: nameState,
+      city: cityState,
+      country: countryState,
+      url: urlState,
+      logo: logoState,
+      titleLabel: titleState,
+      actions: actionsState
+    });
+  }
+
+
+  /**
+   * Handles changes of Dialog Inputs.
+   * @param name    state variable name
+   * @param value   new input value to be set onChange
+   */
+  handleInputChange = (name, value) => {
+    this.setState({
+      [name]: value
+    })
+  }
+
+  /**
+   * Handles adding request.
+   */
+  handleAdd = () => {
+    if(!this.checkUniversity()) return;
+    this.props.addHandler({
+      city: this.state.city,
+      country: this.state.country,
+      id: -1,
+      logoUrl: this.state.logo,
+      name: this.state.name,
+      url: this.state.url
+    });
+    this.handleToggle();
+  }
+
+  /**
+   * Handles editing request.
+   */
+  handleEdit = () => {
+    if(!this.checkUniversity()) return;
+    this.props.editHandler({
+      city: this.state.city,
+      country: this.state.country,
+      id: this.props.university.id,
+      logoUrl: this.state.logo,
+      name: this.state.name,
+      url: this.state.url
+    });
+    this.handleToggle();
+  }
+
+  /**
+   * Handles visiblity changing.
+   */
+  handleToggle = () => {
+    this.setState({
+      name: "",
+      errorName: "",
+      city: "",
+      errorCity: "",
+      country: "",
+      errorCountry: "",
+      url: "",
+      logo: ""
+    });
+    this.props.toggleHandler();
+  }
+
+  /**
+   * Checks whether university Dialog input values are correct.
+   * @return true if correct, false otherwise
+   */
+  checkUniversity = () => {
+    var newErrorName = Util.checkData(this.state.name, "University name is required!");
+    var newErrorCity = Util.checkData(this.state.city, "City is required!");
+    var newErrorCountry = Util.checkData(this.state.country, "Country is required!");
+
+    if(newErrorName !== "" || newErrorCity !== "" || newErrorCountry !== "" ) {
+      this.setState({
+        errorName: newErrorName,
+        errorCity: newErrorCity,
+        errorCountry: newErrorCountry
+      });
+      return false;
+    }
+    else return true;
+  }
+
   render() {
     return(
       <div className="Dialog-university">
         <Dialog
           active={this.props.active}
-          actions={this.props.actions}
-          onEscKeyDown={() => this.props.toggleHandler()}
-          onOverlayClick={() => this.props.toggleHandler()}
-          title={this.props.titleLabel}
+          actions={this.state.actions}
+          onEscKeyDown={() => this.handleToggle()}
+          onOverlayClick={() => this.handleToggle()}
+          title={this.state.titleLabel}
           type="large"
         >
-          <table width="95%">
+          <table width="100%">
             <tbody>
               <tr>
                 <td colSpan="2">
-                  <Input type='text'  label="Name" hint='University name' error={this.props.errorName} value={this.props.name} onChange={(value) => this.props.handleInputChange("inputName", value)} required />
+                  <Input type='text'  label="Name" hint='University name' error={this.state.errorName} value={this.state.name} onChange={(value) => this.handleInputChange("name", value)} required />
                 </td>
               </tr>
               <tr>
                 <td>
-                  <Input type='text' label="City" hint='City' error={this.props.errorCity} value={this.props.city} onChange={(value) => this.props.handleInputChange("inputCity", value)}  required maxLength={32} />
+                  <Input type='text' label="City" hint='City' error={this.state.errorCity} value={this.state.city} onChange={(value) => this.handleInputChange("city", value)}  required maxLength={32} />
                 </td>
                 <td>
-                  <Input type='text' label="Country" hint='Country (eg. CZ, SK)' error={this.props.errorCountry} value={this.props.country} onChange={(value) => this.props.handleInputChange("inputCountry", value)}  required maxLength={8} />
+                  <Input type='text' label="Country" hint='Country (eg. CZ, SK)' error={this.state.errorCountry} value={this.state.country} onChange={(value) => this.handleInputChange("country", value)}  required maxLength={8} />
                 </td>
               </tr>
               <tr>
                 <td colSpan="2">
-                  <Input type='text' label='Website' hint='Link to the web page' value={this.props.url} onChange={(value) => this.props.handleInputChange("inputUrl", value)} />
+                  <Input type='text' label='Website' hint='Link to the web page' value={this.state.url} onChange={(value) => this.handleInputChange("url", value)} />
                 </td>
               </tr>
               <tr>
                 <td colSpan="2">
-                  <Input type='text' label='Logo' hint='Link to the logo source' value={this.props.logoUrl} onChange={(value) => this.props.handleInputChange("inputLogoUrl", value)} />
+                  <Input type='text' label='Logo' hint='Link to the logo source' value={this.state.logo} onChange={(value) => this.handleInputChange("logo", value)} />
                 </td>
               </tr>
             </tbody>

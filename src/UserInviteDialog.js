@@ -84,7 +84,7 @@ class UserEditDialog extends Component {
           title="Invite users"
           type="large"
         >
-          <table width="95%">
+          <table width="100%">
             <tbody>
               <tr>
                 <td>

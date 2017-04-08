@@ -92,33 +92,8 @@ class App extends Component {
       snackbarLabel: "",
 
       universityDialogActive: false,
-      universityDialogTitle: "Add a new university",
-      universityDialogButtonLabel: "Add",
-
-      facultyDialogActive: false,
-      facultyDialogTitle: "Add a new faculty",
-      facultyDialogButtonLabel: "Add",
-
-      inputName: "",
-      inputCity: "",
-      inputCountry: "",
-      inputUrl: "",
-      inputLogoUrl: "",
-
-      nameErrorLabel: "",
-      cityErrorLabel: "",
-      countryErrorLabel: ""
+      facultyDialogActive: false
     };
-  }
-
-  /**
-   * Handles changes of Dialog Inputs.
-   * @param id selectedUniversity value to be set onClick
-   */
-  handleInputChange = (name, value) => {
-    this.setState({
-      [name]: value
-    })
   }
 
   /**
@@ -146,21 +121,12 @@ class App extends Component {
    * Edits a desired university.
    * @param id ID of the university to edit
    */
-  editUniversity = () => {
-    if(!this.checkUniversity()) return;
-    universities[this.state.editId] = {city: this.state.inputCity, country: this.state.inputCountry, id: this.state.editId, logoUrl: this.state.inputLogoUrl, name: this.state.inputName, url: this.state.inputUrl };
+  editUniversity = (university) => {
+    universities[this.state.editId] = university;
     this.setState({
       universityData: universities,
       universityDialogActive: false,
       editId: -1,
-      nameErrorLabel: "",
-      cityErrorLabel: "",
-      countryErrorLabel: "",
-      inputName: "",
-      inputCity: "",
-      inputCountry: "",
-      inputUrl: "",
-      inputLogoUrl: "",
       snackbarLabel: "The university has been succesfully changed!",
       snackbarActive: true
     });
@@ -168,16 +134,14 @@ class App extends Component {
 
   /**
    * Edits the selected faculty.
+   * @param faculty    changed faculty value
    */
-  editFaculty = () => {
-    if(!this.checkFaculty()) return;
-    faculties[this.state.editId] = { id: this.state.editId, name: this.state.inputName, university: this.state.universityData[this.state.selectedUniversity].name };
+  editFaculty = (faculty) => {
+    faculties[this.state.editId] = faculty;
     this.setState({
       facultyData: faculties,
       facultyDialogActive: false,
       editId: -1,
-      nameErrorLabel: "",
-      inputName: "",
       snackbarLabel: "The faculty has been succesfully changed!",
       snackbarActive: true
     });
@@ -186,25 +150,18 @@ class App extends Component {
   /**
    * Adds a new university to the table.
    */
-  addUniversity = () => {
-    if(!this.checkUniversity()) return;
+  addUniversity = (university) => {
     var id = Util.findFreeID(universities);
 
-    if(id === universities.lenght) universities.push({city: this.state.inputCity, country: this.state.inputCountry, id: universities.length, logoUrl: this.state.inputLogoUrl, name: this.state.inputName, url: this.state.inputUrl });
-    else universities[id] = {city: this.state.inputCity, country: this.state.inputCountry, id: id, logoUrl: this.state.inputLogoUrl, name: this.state.inputName, url: this.state.inputUrl };
+    university.id = id;
+
+    if(id === universities.lenght) universities.push(university);
+    else universities[id] = university;
 
     this.setState({
       universityData: universities,
       universityDialogActive: false,
       editId: -1,
-      nameErrorLabel: "",
-      cityErrorLabel: "",
-      countryErrorLabel: "",
-      inputName: "",
-      inputCity: "",
-      inputCountry: "",
-      inputUrl: "",
-      inputLogoUrl: "",
       snackbarLabel: "The university has been succesfully created!",
       snackbarActive: true
     });
@@ -212,58 +169,23 @@ class App extends Component {
 
   /**
    * Adds a new faculty to the table.
+   * @param faculty    the new faculty
    */
-  addFaculty = () => {
-    if(!this.checkFaculty()) return;
+  addFaculty = (faculty) => {
     var id = Util.findFreeID(faculties);
 
-    if(id === faculties.lenght) faculties.push({ id: id, name: this.state.inputName, university: this.state.universityData[this.state.selectedUniversity].name });
-    else faculties[id] = { id: id, name: this.state.inputName, university: this.state.universityData[this.state.selectedUniversity].name };
+    faculty.id = id;
+    faculty.university = this.state.universityData[this.state.selectedUniversity].name;
+
+    if(id === faculties.lenght) faculties.push(faculty);
+    else faculties[id] = faculty;
     this.setState({
       facultyData: faculties,
       facultyDialogActive: false,
       editId: -1,
-      nameErrorLabel: "",
-      inputName: "",
       snackbarLabel: "The faculty has been succesfully created!",
       snackbarActive: true
     });
-  }
-
-  /**
-   * Checks whether university Dialog input values are correct.
-   * @return true if correct, false otherwise
-   */
-  checkUniversity = () => {
-    var newNameErrorLabel = Util.checkData(this.state.inputName, "University name is required!");
-    var newCityErrorLabel = Util.checkData(this.state.inputCity, "City is required!");
-    var newCountryErrorLabel = Util.checkData(this.state.inputCountry, "Country is required!");
-
-    if(newNameErrorLabel !== "" || newCityErrorLabel !== "" || newCountryErrorLabel !== "") {
-      this.setState({
-        nameErrorLabel: newNameErrorLabel,
-        cityErrorLabel: newCityErrorLabel,
-        countryErrorLabel: newCountryErrorLabel,
-      });
-      return false;
-    }
-    else return true;
-  }
-
-  /**
-   * Checks whether faculty Dialog input values are correct.
-   * @return true if correct, false otherwise
-   */
-  checkFaculty = () => {
-    var newNameErrorLabel = Util.checkData(this.state.inputName, "Faculty name is required!");
-
-    if(newNameErrorLabel !== "") {
-      this.setState({
-        nameErrorLabel: newNameErrorLabel
-      });
-      return false;
-    }
-    else return true;
   }
 
   /**
@@ -283,45 +205,9 @@ class App extends Component {
    */
   toggleUniversityDialog = (id) => {
     var newUniversityDialogActive = !this.state.universityDialogActive;
-    var newInputName = this.state.inputName;
-    var newInputCity = this.state.inputCity;
-    var newInputCountry = this.state.inputCountry;
-    var newInputUrl = this.state.inputUrl;
-    var newInputLogoUrl = this.state.inputLogoUrl;
-    var newUniversityDialogTitle = this.state.universityDialogTitle;
-    var newUniversityDialogButtonLabel = this.state.universityDialogButtonLabel;
-
-    if(id === -1 && newUniversityDialogActive) {
-      newUniversityDialogTitle = "Add a new university";
-      newUniversityDialogButtonLabel = "Add";
-      newInputName = "";
-      newInputCity = "";
-      newInputCountry = "";
-      newInputUrl = "";
-      newInputLogoUrl = "";
-    }
-    else if(newUniversityDialogActive) {
-      newUniversityDialogTitle = "Edit university";
-      newUniversityDialogButtonLabel = "Save";
-      newInputName = this.state.universityData[id].name;
-      newInputCity = this.state.universityData[id].city;
-      newInputCountry = this.state.universityData[id].country;
-      newInputUrl = this.state.universityData[id].url;
-      newInputLogoUrl = this.state.universityData[id].logoUrl;
-    }
 
     this.setState({
       universityDialogActive: newUniversityDialogActive,
-      universityDialogTitle: newUniversityDialogTitle,
-      universityDialogButtonLabel: newUniversityDialogButtonLabel,
-      inputName: newInputName,
-      inputCity: newInputCity,
-      inputCountry: newInputCountry,
-      inputUrl: newInputUrl,
-      inputLogoUrl: newInputLogoUrl,
-      nameErrorLabel: "",
-      cityErrorLabel: "",
-      countryErrorLabel: "",
       editId: id
     })
   }
@@ -332,27 +218,9 @@ class App extends Component {
    */
   toggleFacultyDialog = (id) => {
     var newFacultyDialogActive = !this.state.facultyDialogActive;
-    var newInputName = this.state.inputName;
-    var newFacultyDialogTitle = this.state.facultyDialogTitle;
-    var newFacultyDialogButtonLabel = this.state.facultyDialogButtonLabel;
-
-    if(id === -1 && newFacultyDialogActive) {
-      newFacultyDialogTitle = "Add a new faculty";
-      newFacultyDialogButtonLabel = "Add";
-      newInputName = "";
-    }
-    else if(newFacultyDialogActive) {
-      newFacultyDialogTitle = "Edit faculty";
-      newFacultyDialogButtonLabel = "Save";
-      newInputName = this.state.facultyData[id].name;
-    }
 
     this.setState({
       facultyDialogActive: newFacultyDialogActive,
-      facultyDialogTitle: newFacultyDialogTitle,
-      facultyDialogButtonLabel: newFacultyDialogButtonLabel,
-      inputName: newInputName,
-      nameErrorLabel: "",
       editId: id
     })
   }
@@ -380,27 +248,49 @@ class App extends Component {
   }
 
   /**
-   * Generates new university Dialog actions variable.
-   * @return desired actions variable
+   * Gets the university that is selected.
+   * @return the desired university, "" if none is selected
    */
-  generateUniversityActions = () => {
-    var actions = [
-      { label: this.state.universityDialogButtonLabel, onClick: (this.state.editId === -1) ? () => this.addUniversity() : () => this.editUniversity()},
-      { label: "Cancel", onClick: () => this.toggleUniversityDialog(this.state.editId) }
-    ];
-    return actions;
+  getAssociatedUniversity = () => {
+    if(this.state.editId === -1) return "";
+    else return this.state.universityData[this.state.editId];
   }
 
   /**
-   * Generates new faculty Dialog actions variable.
-   * @return desired actions variable
+   * Gets the faculty that is being edited.
+   * @return the desired faculty, "" if none is selected
    */
-  generateFacultyActions = () => {
-    var actions = [
-      { label: this.state.facultyDialogButtonLabel, onClick: (this.state.editId === -1) ? () => this.addFaculty() : () => this.editFaculty()},
-      { label: "Cancel", onClick: () => this.toggleFacultyDialog(this.state.editId) }
-    ];
-    return actions;
+  getAssociatedFaculty = () => {
+    if(this.state.editId === -1) return "";
+    else return this.state.facultyData[this.state.editId];
+  }
+
+  /**
+   * Creates the dialog appropriate for the university selection.
+   */
+  generateDialogs = () => {
+    if(this.state.selectedUniversity === -1)
+      return(
+        <UniversityDialog
+            active={this.state.universityDialogActive}
+            editId={this.state.editId}
+            university={this.getAssociatedUniversity()}
+            addHandler={(university) => this.addUniversity(university)}
+            editHandler={(university) => this.editUniversity(university)}
+            toggleHandler={() => this.toggleUniversityDialog(this.state.editId)}
+          />
+      );
+    else
+      return(
+        <FacultyDialog
+          active={this.state.facultyDialogActive}
+          editId={this.state.editId}
+          faculty={this.getAssociatedFaculty()}
+          addHandler={(faculty) => this.addFaculty(faculty)}
+          editHandler={(faculty) => this.editFaculty(faculty)}
+          toggleHandler={() => this.toggleFacultyDialog(this.state.editId)}
+        />
+      );
   }
 
   render() {
@@ -445,30 +335,7 @@ class App extends Component {
             toggleHandler={this.toggleSnackbar}
             label={this.state.snackbarLabel}
           />
-        <UniversityDialog
-            actions={this.generateUniversityActions()}
-            active={this.state.universityDialogActive}
-            name={this.state.inputName}
-            city={this.state.inputCity}
-            country={this.state.inputCountry}
-            url={this.state.inputUrl}
-            logoUrl={this.state.inputLogoUrl}
-            titleLabel={this.state.universityDialogTitle}
-            errorName={this.state.nameErrorLabel}
-            errorCity={this.state.cityErrorLabel}
-            errorCountry={this.state.countryErrorLabel}
-            toggleHandler={() => this.toggleUniversityDialog(this.state.editId)}
-            handleInputChange={(name, value) => this.handleInputChange(name, value)}
-          />
-          <FacultyDialog
-            actions={this.generateFacultyActions()}
-            active={this.state.facultyDialogActive}
-            name={this.state.inputName}
-            titleLabel={this.state.facultyDialogTitle}
-            errorLabel={this.state.nameErrorLabel}
-            toggleHandler={() => this.toggleFacultyDialog(this.state.editId)}
-            handleInputChange={(name, value) => this.handleInputChange(name, value)}
-          />
+          {this.generateDialogs()}
         </Panel>
       </Layout>
     );
