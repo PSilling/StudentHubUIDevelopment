@@ -30,4 +30,46 @@ Util.checkData = function(data, errorMessage) {
   else return "";
 }
 
+/**
+ * Holds university state codes
+ * @type {Enum}
+ */
+Util.states = {
+  CZ: "CZ",
+  SK: "SK"
+};
+
+/**
+ * Holds user role codes
+ * @type {Enum}
+ */
+Util.userRoles = {
+  superviser: "AC_SUPERVISOR",
+  admin: "ADMIN",
+  companyRep: "COMPANY_REP",
+  student: "STUDENT",
+  techLeader: "TECH_LEADER"
+}
+
+/**
+ * Holds Company size codes
+ * @type {Enum}
+ */
+Util.companySizes = {
+  startUp: "STARTUP",
+  small: "SMALL",
+  medium: "MEDIUM",
+  corp: "CORPORATE"
+}
+
+/**
+ * Holds Company plan codes
+ * @type {Enum}
+ */
+Util.companyPlans = {
+  t1: "TIER_1",
+  t2: "TIER_2",
+  t3: "TIER_3"
+}
+
 export default Util;

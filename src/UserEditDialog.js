@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from 'react-toolbox/lib/dialog/Dialog.js';
+import Dropdown from 'react-toolbox/lib/dropdown/Dropdown.js';
 import Input from 'react-toolbox/lib/input/Input.js';
 
 import Util from './Util.js';
@@ -51,6 +52,17 @@ class UserEditDialog extends Component {
     });
   }
 
+  /**
+   * Dialog source of user roles.
+   */
+  roles = [
+    { value: "AC_SUPERVISOR", label: "AC_SUPERVISOR"},
+    { value: "ADMIN", label: "ADMIN"},
+    { value: "COMPANY_REP", label: "COMPANY_REP"},
+    { value: "STUDENT", label: "STUDENT"},
+    { value: "TECH_LEADER", label: "TECH_LEADER"}
+  ];
+
   actions = [
     { label: "Save", onClick: () => this.handleSave() },
     { label: "Cancel", onClick: () => this.handleToggle() }
@@ -73,7 +85,7 @@ class UserEditDialog extends Component {
       lastLogin:	this.props.user.lastLogin,
       name:	this.state.name,
       phone:	this.state.phone,
-      roles:	this.props.user.roles,
+      roles:	this.state.role,
       tags:	this.state.tags,
       username:	this.state.username
     });
@@ -105,7 +117,6 @@ class UserEditDialog extends Component {
       phone: "",
       faculty: "",
       company: "",
-      role: "",
       tags: "",
     });
     this.props.toggleHandler();
@@ -172,7 +183,13 @@ class UserEditDialog extends Component {
               </tr>
               <tr>
                 <td width="50%">
-                  <Input type='text' label="Role" hint='User role' error={this.state.errorRole}  required  value={this.state.role} onChange={(value) => this.handleInputChange("role", value)} />
+                  <Dropdown
+                    auto
+                    source={this.roles}
+                    onChange={(value) => this.handleInputChange("role", value)}
+                    label='Role'
+                    value={this.state.role}
+                  />
                 </td>
                 <td width="50%">
                   <Input type='text' label="Tags" hint='User tags' value={this.state.tags} onChange={(value) => this.handleInputChange("tags", value)} />

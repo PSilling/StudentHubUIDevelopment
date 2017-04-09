@@ -16,57 +16,53 @@ import UsersView from './UsersView.js';
 import Util from './Util.js';
 
 /**
- * Holds university state codes
- * @type {Enum}
+ * Creates a random list of new universities.
  */
-const states = {
-  CZ: "CZ",
-  SK: "SK"
-}
+function generateUniversities() {
+  var universities = [];
 
-/**
- * List of faculties
- * @type {Array}
- */
-var faculties = [
-   { id: 'ID', name: 'Faculty #1', university: "University #1" },
-   { id: 'ID', name: 'Faculty #2', university: "University #1" },
-   { id: 'ID', name: 'Faculty #3', university: "University #2" },
-   { id: 'ID', name: 'Faculty #4', university: "University #1" },
-   { id: 'ID', name: 'Faculty #5', university: "University #3" },
-   { id: 'ID', name: 'Faculty #6', university: "University #3" },
-   { id: 'ID', name: 'Faculty #7', university: "University #1" },
-   { id: 'ID', name: 'Faculty #8', university: "University #2" },
-   { id: 'ID', name: 'Faculty #9', university: "University #1" },
-   { id: 'ID', name: 'Faculty #10', university: "University #3" }
- ];
+  for (var i = 0; i < 25; i++) {
+    universities.push({
+      city: 'City',
+      country: (i % 2 === 0) ? Util.states.CZ : Util.states.SK,
+      id: i,
+      logoUrl: "LogoURL",
+      name: "University #"+(i+1),
+      url: "URL"
+    });
+  }
+
+  return universities;
+};
 
 /**
  * List of universities
  * @type {Array}
  */
- var universities = [
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #1", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #2", url: "URL" },
-   { city: 'City', country: states.SK, id: 'ID', logoUrl: "LogoURL", name: "University #3", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #4", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #5", url: "URL" },
-   { city: 'City', country: states.SK, id: 'ID', logoUrl: "LogoURL", name: "University #6", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #7", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #8", url: "URL" },
-   { city: 'City', country: states.SK, id: 'ID', logoUrl: "LogoURL", name: "University #9", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #10", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #11", url: "URL" },
-   { city: 'City', country: states.SK, id: 'ID', logoUrl: "LogoURL", name: "University #12", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #13", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #14", url: "URL" },
-   { city: 'City', country: states.SK, id: 'ID', logoUrl: "LogoURL", name: "University #15", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #16", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #17", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #18", url: "URL" },
-   { city: 'City', country: states.CZ, id: 'ID', logoUrl: "LogoURL", name: "University #19", url: "URL" },
-   { city: 'City', country: states.SK, id: 'ID', logoUrl: "LogoURL", name: "University #20", url: "URL" }
-  ];
+ var universities = generateUniversities();
+
+/**
+ * Creates a random list of new faculties.
+ */
+function generateFaculties() {
+  var faculties = [];
+
+  for (var i = 0; i < 100; i++) {
+    faculties.push({
+      id: i,
+      name: 'Faculty #'+i,
+      university: "University #"+(Math.floor(Math.random() * 25) + 1)
+    });
+  }
+  return faculties;
+};
+
+/**
+ * List of faculties
+ * @type {Array}
+ */
+var faculties = generateFaculties();
+
 
 /**
  * Renders the search Input field.
@@ -179,6 +175,7 @@ class App extends Component {
 
     if(id === faculties.lenght) faculties.push(faculty);
     else faculties[id] = faculty;
+
     this.setState({
       facultyData: faculties,
       facultyDialogActive: false,

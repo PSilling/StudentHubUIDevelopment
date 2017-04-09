@@ -163,7 +163,7 @@ class ContentTable extends Component {
     else {
       for(let i = 0; i < this.props.facultyData.length; i++) {
         if(this.props.facultyData[i].university === this.props.universityData[this.state.selectedUniversity].name &&
-        typeof this.props.facultyData[i].name !== "undefined" && this.props.universityData[i].name !== "") {
+        typeof this.props.facultyData[i].name !== "undefined" && this.props.facultyData[i].name !== "") {
           cells.push(this.generateFacultyRow(i));
         }
       }

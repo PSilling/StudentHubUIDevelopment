@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from 'react-toolbox/lib/dialog/Dialog.js';
+import Dropdown from 'react-toolbox/lib/dropdown/Dropdown.js';
 import Input from 'react-toolbox/lib/input/Input.js';
 
 import Util from './Util.js';
@@ -22,8 +23,7 @@ class UniversityDialog extends Component {
       errorName: "",
       city: "",
       errorCity: "",
-      country: "",
-      errorCountry: "",
+      country: "CZ",
       url: "",
       logo: "",
       titleLabel: "Add a new university",
@@ -51,7 +51,7 @@ class UniversityDialog extends Component {
     if(nextProps.editId === -1) {
       nameState = "";
       cityState = "";
-      countryState = "";
+      countryState = "CZ";
       urlState = "";
       logoState = "";
       titleState = "Add a new university";
@@ -84,6 +84,13 @@ class UniversityDialog extends Component {
     });
   }
 
+  /**
+   * Dialog source of state codes.
+   */
+  states = [
+    { value: "CZ", label: "CZ" },
+    { value: "SK", label: "SK" }
+  ];
 
   /**
    * Handles changes of Dialog Inputs.
@@ -137,8 +144,6 @@ class UniversityDialog extends Component {
       errorName: "",
       city: "",
       errorCity: "",
-      country: "",
-      errorCountry: "",
       url: "",
       logo: ""
     });
@@ -152,13 +157,11 @@ class UniversityDialog extends Component {
   checkUniversity = () => {
     var newErrorName = Util.checkData(this.state.name, "University name is required!");
     var newErrorCity = Util.checkData(this.state.city, "City is required!");
-    var newErrorCountry = Util.checkData(this.state.country, "Country is required!");
 
-    if(newErrorName !== "" || newErrorCity !== "" || newErrorCountry !== "" ) {
+    if(newErrorName !== "" || newErrorCity !== "") {
       this.setState({
         errorName: newErrorName,
-        errorCity: newErrorCity,
-        errorCountry: newErrorCountry
+        errorCity: newErrorCity
       });
       return false;
     }
@@ -188,7 +191,13 @@ class UniversityDialog extends Component {
                   <Input type='text' label="City" hint='City' error={this.state.errorCity} value={this.state.city} onChange={(value) => this.handleInputChange("city", value)}  required maxLength={32} />
                 </td>
                 <td>
-                  <Input type='text' label="Country" hint='Country (eg. CZ, SK)' error={this.state.errorCountry} value={this.state.country} onChange={(value) => this.handleInputChange("country", value)}  required maxLength={8} />
+                  <Dropdown
+                    auto
+                    source={this.states}
+                    onChange={(value) => this.handleInputChange("country", value)}
+                    label='Country'
+                    value={this.state.country}
+                  />
                 </td>
               </tr>
               <tr>

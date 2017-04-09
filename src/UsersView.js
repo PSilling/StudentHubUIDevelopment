@@ -15,12 +15,12 @@ function generateUsers() {
     users.push({
       company: {
         city:	"string",
-        country:	states.CZ,
+        country:	(i % 2 === 0) ? Util.states.CZ : Util.states.SK,
         id:	0,
         logoUrl: "string",
         name:	"string",
-        plan:	companyPlans.t1,
-        size:	companySizes.medium,
+        plan:	(i % 3 === 0) ? Util.companyPlans.t1 : Util.companyPlans.t2,
+        size:	(i % 3 === 0) ? Util.companySizes.small : Util.companySizes.medium,
         url:	"string"
       },
       email:	"string",
@@ -35,55 +35,13 @@ function generateUsers() {
       ],
       name:	"Name of "+i,
       phone:	"777 666 0"+i,
-      roles:	userRoles.admin,
+      roles:	(i % 10 === 0) ? Util.userRoles.admin : Util.userRoles.student,
       tags:	"Array",
       username:	"Username of "+i
     });
   }
 
   return users;
-}
-
-/**
- * Holds state codes
- * @type {Enum}
- */
-const states = {
-  CZ: "CZ",
-  SK: "SK"
-}
-
-/**
- * Holds user role codes
- * @type {Enum}
- */
-const userRoles = {
-  superviser: "AC_SUPERVISOR",
-  admin: "ADMIN",
-  companyRep: "COMPANY_REP",
-  student: "STUDENT",
-  techLeader: "TECH_LEADER"
-}
-
-/**
- * Holds Company size codes
- * @type {Enum}
- */
-const companySizes = {
-  startUp: "STARTUP",
-  small: "SMALL",
-  medium: "MEDIUM",
-  corp: "CORPORATE"
-}
-
-/**
- * Holds Company plan codes
- * @type {Enum}
- */
-const companyPlans = {
-  t1: "TIER_1",
-  t2: "TIER_2",
-  t3: "TIER_3"
 }
 
 /**
